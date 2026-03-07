@@ -6,6 +6,13 @@ public class Lista {
 
     public Lista(){prim=ult=null;qtd=0;}
 
+    public No getPrim(){return prim;}
+    public No getUlt(){return ult;}
+    public int getQtd(){return qtd;}
+
+    public void setPrim(No prim){this.prim=prim;}
+    public void setUlt(No ult){this.ult=ult;}
+
     public void addValor(int valor){
 
         if(qtd==0)

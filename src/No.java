@@ -12,4 +12,5 @@ public class No {
 
     public void setAnt(No ant){this.ant=ant;}
     public void setProx(No prox){this.prox=prox;}
+    public void setValor(int valor){this.valor=valor;}
 }
