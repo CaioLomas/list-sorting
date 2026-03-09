@@ -30,16 +30,16 @@ public class Lista {
 
     public void preencheLista(){
 
+        addValor(42);
+        addValor(17);
+        addValor(8);
+        addValor(99);
+        addValor(23);
+        addValor(4);
+        addValor(65);
+        addValor(31);
         addValor(50);
-        addValor(69);
-        addValor(71);
-        addValor(25);
-        addValor(33);
-        addValor(18);
-        addValor(84);
-        addValor(5);
-        addValor(66);
-        addValor(11);
+        addValor(12);
     }
 
     public void exibeLista(){
