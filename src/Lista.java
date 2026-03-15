@@ -2,16 +2,39 @@ public class Lista {
 
     private No prim;
     private No ult;
-    private static int qtd;
+    private int qtd;
 
     public Lista(){prim=ult=null;qtd=0;}
 
     public No getPrim(){return prim;}
     public No getUlt(){return ult;}
     public int getQtd(){return qtd;}
+    public int getMaior(){
+        No pa=prim.getProx();
+        int maior=prim.getValor();
+
+        while(pa!=null)
+        {
+            if(maior<pa.getValor())
+                maior=pa.getValor();
+            pa=pa.getProx();
+        }
+
+        return maior;
+    }
+    public int getMaxAlgarismos(){
+        int i=getMaior(),j=0;
+        while(i>0)
+        {
+            j++;
+            i/=10;
+        }
+        return j;
+    }
 
     public void setPrim(No prim){this.prim=prim;}
     public void setUlt(No ult){this.ult=ult;}
+
 
     public void addValor(int valor){
 
@@ -30,16 +53,16 @@ public class Lista {
 
     public void preencheLista(){
 
-        addValor(42);
-        addValor(17);
-        addValor(8);
-        addValor(99);
-        addValor(23);
-        addValor(4);
-        addValor(65);
-        addValor(31);
-        addValor(50);
         addValor(12);
+        addValor(10);
+        addValor(5);
+        addValor(7);
+        addValor(9);
+        addValor(4);
+        addValor(2);
+        addValor(1);
+        addValor(11);
+        addValor(5);
     }
 
     public void exibeLista(){
@@ -53,5 +76,10 @@ public class Lista {
                 System.out.printf(" [%d] -",aux.getValor());
             aux=aux.getProx();
         }
+    }
+
+    public void limpaLista() {
+        prim=ult=null;
+        qtd=0;
     }
 }

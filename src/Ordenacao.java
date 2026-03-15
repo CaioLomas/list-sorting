@@ -1,11 +1,10 @@
-public class Ordenacao {
+import java.sql.SQLOutput;
 
-    static final int qtd_algoritmos=7;
+public class Ordenacao {
 
     public Ordenacao(){}
 
     public void insercaoDireta(Lista L){
-        System.out.print("Método em execução => Inserção Direta\n");
         No pi = L.getPrim().getProx(), ppos;
         int aux;
 
@@ -68,7 +67,6 @@ public class Ordenacao {
     }
 
     public void insercaoBinaria(Lista L){
-        System.out.print("Método em execução => Inserção Binária\n");
         No pi = L.getPrim().getProx(), ppos,paux;
         int aux;
 
@@ -88,7 +86,6 @@ public class Ordenacao {
     }
 
     public void selecaoDireta(Lista L){
-        System.out.print("Método em execução => Seleção Direta\n");
         No pi,pj,pmenor;
         int menor;
         pi=pmenor=L.getPrim();
@@ -114,7 +111,6 @@ public class Ordenacao {
     }
 
     public void bolha(Lista L){
-        System.out.print("Método em execução => Bolha\n");
         boolean flag=true;
         No pant,pprox,pult;
         int aux;
@@ -144,7 +140,6 @@ public class Ordenacao {
     }
 
     public void shake(Lista L){
-        System.out.print("Método em execução => Shake\n");
         No pini,pfim,pant,pprox;
         boolean flag=true;
         int aux;
@@ -188,65 +183,51 @@ public class Ordenacao {
         }
     }
 
-//    public void shell(Lista L){
-//        System.out.print("Método em execução => Shell\n");
-//        int gap=L.getQtd()/2;
-//        int i,valorPivo;
-//        No noCorrente,noAnterior,noTroca;
-//
-//        while(gap>0){
-//            noCorrente=L.getPrim();
-//            for(i=0;i<gap;i++)
-//                noCorrente=noCorrente.getProx();
-//
-//            while(noCorrente!=null){
-//                valorPivo=noCorrente.getValor();
-//                noTroca=noCorrente;
-//
-//                // Busca inicial do nó anterior à distância gap
-//                noAnterior=noTroca;
-//                for(i=0;i<gap && noAnterior!=null;i++)
-//                    noAnterior=noAnterior.getAnt();
-//
-//                // Condição estruturada: verifica se o nó existe e se o valor é maior que o pivô
-//                while (noAnterior != null && noAnterior.getValor() > valorPivo) {
-//                    noTroca.setValor(noAnterior.getValor());
-//                    noTroca = noAnterior;
-//
-//                    // Atualiza o noAnterior voltando gap casas para a próxima verificação
-//                    for (i = 0; i < gap && noAnterior != null; i++)
-//                        noAnterior = noAnterior.getAnt();
-//                }
-//
-//                noTroca.setValor(valorPivo);
-//                noCorrente = noCorrente.getProx();
-//            }
-//            gap /= 2;
-//        }
-//    }
+    public void shell(Lista L){ //Gigante e feio, tá ordenando mas não sei se tá certo, só consegui com muitos loops
+        int aux,dist;
+        No noA,noB,noAuxA,noAuxB;
 
-    public void shell(Lista L){
-        System.out.print("Método em execução => Shell\n");
-        int aux,gap;
-        No noant,nogap;
+        dist=1;
+        while(dist<L.getQtd())
+            dist=3*dist+1;
+        dist/=3;
 
-        for(gap=L.getQtd()/2;gap>0;gap/=2){
+        while(dist>0){
 
-            nogap=noant=L.getPrim();
-            for(int i=0;i<gap;i++)
-                nogap=nogap.getProx();
+            noA=noB=L.getPrim();
+            for(int j=0;j<dist;j++)
+                noB=noB.getProx();
 
-            while(nogap!=null){
+            while(noB!=null){
 
-                aux=nogap.getValor();
+                if(noB.getValor()<noA.getValor()){
 
-                if(aux<noant.getValor())
-                    nogap.setValor(noant.getValor());
+                    noAuxA=noA;
+                    noAuxB=noB;
 
-                noant.setValor(aux);
-                nogap=nogap.getProx();
-                noant=noant.getProx();
+                    aux=noAuxB.getValor();
+                    noAuxB.setValor(noAuxA.getValor());
+                    noAuxA.setValor(aux);
+
+                    noAuxB=noAuxA;
+                    for(int k=0;noAuxA!=null && k<dist;k++)
+                        noAuxA=noAuxA.getAnt();
+
+                    while(noAuxA!=null && noAuxB.getValor()<noAuxA.getValor()){
+
+                        noAuxB.setValor(noAuxA.getValor());
+                        noAuxA.setValor(aux);
+
+                        noAuxB=noAuxA;
+                        for(int k=0;noAuxA!=null && k<dist;k++)
+                            noAuxA=noAuxA.getAnt();
+                    }
+                }
+
+                noA=noA.getProx();
+                noB=noB.getProx();
             }
+            dist/=3;
         }
     }
 
@@ -259,7 +240,6 @@ public class Ordenacao {
     }
 
     public void heap(Lista L){
-        System.out.print("Método em execução => Heap\n");
         if(L.getQtd()>1)
         {
             No pai,fesq,fdir,maiorF,auxult=L.getUlt();
@@ -302,11 +282,19 @@ public class Ordenacao {
         }
     }
 
-    public void quick(Lista L){
+    public void quick(No ini,No fim){
 
     }
 
-    public void quickPivo(Lista L){
+    public void quickSemPivo(Lista L){
+        quick(L.getPrim(),L.getUlt());
+    }
+
+    public void quickP(Lista L){
+
+    }
+
+    public void quickComPivo(Lista L){
 
     }
 
@@ -318,16 +306,114 @@ public class Ordenacao {
 
     }
 
-    public void counting(Lista L){
+    public No buscaNumCounting(int i,No busca){
 
+        while(busca!=null && busca.getValor()!=i)
+            busca=busca.getProx();
+
+        return busca;
+    }
+
+    public void counting(Lista L){
+        int vet[],i;
+        No pa;
+        Lista nova=new Lista();
+
+        vet=new int[L.getMaior()+1];
+        for(pa=L.getPrim();pa!=null;pa=pa.getProx()){
+            i=pa.getValor();
+            vet[i]++;
+        }
+
+        for(i=0;i<vet.length;i++){
+            if(vet[i]>0)
+            {
+                pa=L.getPrim();
+                pa=buscaNumCounting(i,pa);
+                while(vet[i]>0)
+                {
+                    nova.addValor(pa.getValor());
+                    vet[i]--;
+                }
+            }
+        }
+
+        L.setPrim(nova.getPrim());
+        L.setUlt(nova.getUlt());
     }
 
     public void bucket(Lista L){
+        Ordenacao ord = new Ordenacao();
+        Lista baldes[] = new Lista[L.getQtd()];
+        No pa=L.getPrim();
+        int i,maior=L.getMaior();
+        double formula;
+        boolean primeiro=true;
 
+        for(i=0;i<baldes.length;i++)
+            baldes[i] = new Lista();
+
+        while(pa!=null){
+            formula=(double)baldes.length*pa.getValor()/(maior+1);
+            baldes[(int)formula].addValor(pa.getValor());
+            pa=pa.getProx();
+        }
+
+        for(i=0;i<baldes.length;i++){
+            if(baldes[i].getQtd()>0)
+            {
+                ord.insercaoDireta(baldes[i]);
+                if(primeiro==true)
+                {
+                    L.setPrim(baldes[i].getPrim());
+                    L.setUlt(baldes[i].getUlt());
+                    primeiro=false;
+                }
+                else
+                {
+                    L.getUlt().setProx(baldes[i].getPrim());
+                    L.getUlt().getProx().setAnt(L.getUlt());
+                    L.setUlt(baldes[i].getUlt());
+                }
+            }
+        }
     }
 
     public void radix(Lista L){
+        int i,j,base_mod=10,base_div=1,digito_menos_significativo;
+        Lista laux = new Lista(),vetores[] = new Lista[base_mod];
+        No aux,pa=L.getPrim();
 
+        for(i=0;i<vetores.length;i++)
+            vetores[i] = new Lista();
+
+        for(i=L.getMaxAlgarismos();i>0;i--){
+
+            while(pa!=null){
+                digito_menos_significativo=(pa.getValor()%base_mod)/base_div;
+                vetores[digito_menos_significativo].addValor(pa.getValor());
+                pa=pa.getProx();
+            }
+
+            for(j=0;j<vetores.length;j++)
+                if(vetores[j].getQtd()>0)
+                {
+                    aux=vetores[j].getPrim();
+                    while(aux!=null)
+                    {
+                        laux.addValor(aux.getValor());
+                        aux=aux.getProx();
+                    }
+                    vetores[j].limpaLista();
+                }
+
+            L.setPrim(laux.getPrim());
+            L.setUlt(laux.getUlt());
+            pa=L.getPrim();
+            base_div=base_mod;
+            base_mod*=10;
+            laux.limpaLista();
+        }
     }
 
     public void comb(Lista L){
