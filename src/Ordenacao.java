@@ -417,13 +417,47 @@ public class Ordenacao {
     }
 
     public void comb(Lista L){
+        int dist,aux,i;
+        No pa,pb;
 
+        dist=(int)(L.getQtd()/1.3);
+
+        while(dist>0){
+
+            pa=pb=L.getPrim();
+            for(i=0;i<dist;i++)
+                pb=pb.getProx();
+
+            while(pb!=null){
+                if(pa.getValor()>=pb.getValor()){
+                    aux=pa.getValor();
+                    pa.setValor(pb.getValor());
+                    pb.setValor(aux);
+                }
+                pa=pa.getProx();
+                pb=pb.getProx();
+            }
+
+            dist/=1.3;
+        }
     }
 
     public void gnome(Lista L){
+        int aux;
+        No pa=L.getPrim().getProx();
 
+        while(pa!=null){
+            aux=pa.getValor();
+            if(pa.getAnt()==null || aux>=pa.getAnt().getValor())
+                pa=pa.getProx();
+            else
+            {
+                pa.setValor(pa.getAnt().getValor());
+                pa.getAnt().setValor(aux);
+                pa=pa.getAnt();
+            }
+        }
     }
-
 
     public void tim(Lista L){
 
