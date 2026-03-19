@@ -8,11 +8,11 @@ public class Main{
         for(int i=1;i<17;i++){
             L = new Lista();
             L.preencheLista();
-            System.out.println("-----------------------------------------------------------------------------------");
+            System.out.println("\n------------------------------------------------------------------------------------------------------------------------");
             System.out.print("Lista inicial: \n");
             L.exibeLista();
-            System.out.println("\n-----------------------------------------------------------------------------------");
-            System.out.print("Lista ordenada: ");
+            System.out.println("\n------------------------------------------------------------------------------------------------------------------------");
+            System.out.print("Lista pós ordenação: ");
             switch(i){
                 case 1: ord.insercaoDireta(L);
                     System.out.print("Método em execução => Inserção Direta\n");
@@ -41,11 +41,11 @@ public class Main{
                 case 9: ord.quickComPivo(L);
                     System.out.print("Método em execução => Quick Com Pivô\n");
                     break;
-                case 10: ord.mergeTopDown(L);
-                    System.out.print("Método em execução => Merge Top Down\n");
+                case 10: ord.merge(L);
+                    System.out.print("Método em execução => Merge\n");
                     break;
-                case 11: ord.mergeBottomUp(L);
-                    System.out.print("Método em execução => Merge Bottom Up\n");
+                case 11: ord.mergeRecursivo(L);
+                    System.out.print("Método em execução => Merge Recursivo\n");
                     break;
                 case 12: ord.counting(L);
                     System.out.print("Método em execução => Counting\n");
@@ -66,8 +66,9 @@ public class Main{
                     System.out.print("Método em execução => Tim\n");
                     break;
             }
+            L.checaOrdenacao();
             L.exibeLista();
-            System.out.println("\n-----------------------------------------------------------------------------------");
+            System.out.println("\n------------------------------------------------------------------------------------------------------------------------");
             System.out.print("\n\n");
             L.limpaLista();
         }

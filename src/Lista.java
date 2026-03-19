@@ -3,8 +3,9 @@ public class Lista {
     private No prim;
     private No ult;
     private int qtd;
+    private boolean ordenado;
 
-    public Lista(){prim=ult=null;qtd=0;}
+    public Lista(){prim=ult=null;qtd=0;ordenado=false;}
 
     public No getPrim(){return prim;}
     public No getUlt(){return ult;}
@@ -52,7 +53,8 @@ public class Lista {
     }
 
     public void preencheLista(){
-
+        //Está com 16 elementos para ser múltiplo de 2 (merge), com alguns repetidos para teste do counting/radix/bucket. Se colocar qualquer quantia
+        //sem ser potência de 2 vai explodir chicão
         addValor(12);
         addValor(10);
         addValor(5);
@@ -62,6 +64,12 @@ public class Lista {
         addValor(2);
         addValor(1);
         addValor(11);
+        addValor(5);
+        addValor(7);
+        addValor(10);
+        addValor(25);
+        addValor(84);
+        addValor(4);
         addValor(5);
     }
 
@@ -76,10 +84,34 @@ public class Lista {
                 System.out.printf(" [%d] -",aux.getValor());
             aux=aux.getProx();
         }
+
+        if(ordenado)
+            System.out.print(" Ordenada         \u2714");
+        else
+            System.out.print(" Desordenada      \u2717");
     }
 
     public void limpaLista() {
         prim=ult=null;
         qtd=0;
+    }
+
+    public void checaOrdenacao(){
+        if(qtd<2)
+            ordenado=true;
+        else{
+            No pi,pj;
+            pi=prim;
+            pj=prim.getProx();
+
+            while(pj.getProx()!=null && pi.getValor()<=pj.getValor())
+            {
+                pi=pj;
+                pj=pj.getProx();
+            }
+
+            if(pj.getProx()==null && pi.getValor()<=pj.getValor())
+                ordenado=true;
+        }
     }
 }

@@ -1,8 +1,41 @@
-import java.sql.SQLOutput;
-
 public class Ordenacao {
 
     public Ordenacao(){}
+
+    public No calc_meioMerge(Lista l){
+        int metade=l.getQtd()/2;
+        No meio=l.getPrim();
+
+        for(int i=1;i<metade;i++)
+            meio=meio.getProx();
+
+        return meio;
+    }
+
+    private No calc_meio(No ini,No fim){
+        int cont=0;
+        No meio=fim;
+
+        while(meio!=ini)
+        {
+            meio=meio.getAnt();
+            cont++;
+        }
+        cont++;
+
+        for(int i=0;i<cont/2;i++)
+            meio=meio.getProx();
+
+        return meio;
+    }
+
+    public void troca(No a,No b){
+        int aux;
+
+        aux=a.getValor();
+        a.setValor(b.getValor());
+        b.setValor(aux);
+    }
 
     public void insercaoDireta(Lista L){
         No pi = L.getPrim().getProx(), ppos;
@@ -20,24 +53,6 @@ public class Ordenacao {
             ppos.setValor(aux);
             pi=pi.getProx();
         }
-    }
-
-    //Código feeeeeeeeeeio feio feio, seco seco seco, n pensei em algo melhor infelizmente
-    public No calc_meio(No ini,No fim){
-        int cont=0;
-        No meio=fim;
-
-        while(meio!=ini)
-        {
-            meio=meio.getAnt();
-            cont++;
-        }
-        cont++;
-
-        for(int i=0;i<(int)cont/2;i++)
-            meio=meio.getProx();
-
-        return meio;
     }
 
     public No busca_binaria(int aux,No pi,Lista L){
@@ -113,7 +128,6 @@ public class Ordenacao {
     public void bolha(Lista L){
         boolean flag=true;
         No pant,pprox,pult;
-        int aux;
 
         pult=L.getUlt();
         pant=L.getPrim();
@@ -124,9 +138,7 @@ public class Ordenacao {
             while(pant!=pult){
                 if(pant.getValor()>pprox.getValor()){
                     flag=true;
-                    aux=pprox.getValor();
-                    pprox.setValor(pant.getValor());
-                    pant.setValor(aux);
+                    troca(pprox,pant);
                 }
 
                 pant=pprox;
@@ -142,7 +154,6 @@ public class Ordenacao {
     public void shake(Lista L){
         No pini,pfim,pant,pprox;
         boolean flag=true;
-        int aux;
         pini=L.getPrim();
         pfim=L.getUlt();
         pant=pini;
@@ -154,30 +165,28 @@ public class Ordenacao {
             while(pant!=pfim){
                 if(pant.getValor()>pprox.getValor()){
                     flag=true;
-                    aux=pprox.getValor();
-                    pprox.setValor(pant.getValor());
-                    pant.setValor(aux);
+                    troca(pant,pprox);
                 }
                 pant=pprox;
                 pprox=pprox.getProx();
             }
 
             pfim=pfim.getAnt();
+            if(pfim==pini) flag=false;
             pprox=pfim;
             pant=pprox.getAnt();
 
             while(pprox!=pini){
                 if(pant.getValor()>pprox.getValor()){
                     flag=true;
-                    aux=pprox.getValor();
-                    pprox.setValor(pant.getValor());
-                    pant.setValor(aux);
+                    troca(pant,pprox);
                 }
                 pprox=pant;
                 pant=pant.getAnt();
             }
 
             pini=pini.getProx();
+            if(pini==pfim) flag=false;
             pant=pini;
             pprox=pant.getProx();
         }
@@ -282,27 +291,135 @@ public class Ordenacao {
         }
     }
 
-    public void quick(No ini,No fim){
+    private void quickSP(No ini,No fim){
+        No pa,pb;
+        pa=ini;
+        pb=fim;
 
+        while(pa!=pb)
+        {
+            while(pa!=pb && pa.getValor()<=pb.getValor())
+                pa=pa.getProx();
+            troca(pa,pb);
+
+            while(pa!=pb && pa.getValor()<=pb.getValor())
+                pb=pb.getAnt();
+            troca(pa,pb);
+        }
+
+        if(pa!=ini)
+            quickSP(ini,pa.getAnt());
+        if(pb!=fim)
+            quickSP(pb.getProx(),fim);
     }
 
     public void quickSemPivo(Lista L){
-        quick(L.getPrim(),L.getUlt());
+        quickSP(L.getPrim(),L.getUlt());
     }
 
-    public void quickP(Lista L){
+    private void quickCP(No ini,No fim){
+        No pa,pb,no_pivo=calc_meio(ini,fim);
+        int pivo=no_pivo.getValor();
+        pa=ini;
+        pb=fim;
 
+        while(pa!=pb)
+        {
+            while(pa.getValor()<pivo)
+                pa=pa.getProx();
+            while(pivo<pb.getValor())
+                pb=pb.getAnt();
+
+            if(pa.getAnt()!=pb)
+                troca(pa,pb);
+        }
+
+        if(pa!=ini)
+            quickSP(ini,pa.getAnt());
+        if(pb!=fim)
+            quickSP(pb.getProx(),fim);
     }
 
     public void quickComPivo(Lista L){
-
+        quickCP(L.getPrim(),L.getUlt());
     }
 
-    public void mergeTopDown(Lista L){
+    private void fusao(Lista L,Lista l1,Lista l2,int seq){
+        No p1=l1.getPrim(),p2=l2.getPrim(),pl=L.getPrim();
+        while(p1!=null && p2!=null){
+            int i=0,j=0;
 
+            while(i<seq && j<seq){
+                if(p1.getValor()<=p2.getValor()){
+                    pl.setValor(p1.getValor());
+                    p1=p1.getProx();
+                    i++;
+                }else{
+                    pl.setValor(p2.getValor());
+                    p2=p2.getProx();
+                    j++;
+                }
+                pl=pl.getProx();
+            }
+
+            while(i<seq && p1!=null){
+                pl.setValor(p1.getValor());
+                p1=p1.getProx();
+                i++;
+                pl=pl.getProx();
+            }
+
+            while(j<seq && p2!=null){
+                pl.setValor(p2.getValor());
+                p2=p2.getProx();
+                j++;
+                pl=pl.getProx();
+            }
+        }
     }
 
-    public void mergeBottomUp(Lista L){
+    private void particao(Lista l,Lista l1,Lista l2){
+        No p=l.getPrim(),meio=calc_meioMerge(l),pl1=l1.getPrim(),pl2=l2.getPrim();
+
+        while(p!=meio.getProx())
+        {
+            pl1.setValor(p.getValor());
+            pl1=pl1.getProx();
+            p=p.getProx();
+        }
+        while(p!=null)
+        {
+            pl2.setValor(p.getValor());
+            pl2=pl2.getProx();
+            p=p.getProx();
+        }
+    }
+
+    //Só pra nao ficar remontando as listas toda hora
+    private void montaLista(int tam,Lista l1,Lista l2){
+        for(int i=0;i<tam;i++)
+        {
+            l1.addValor(0);
+            l2.addValor(0);
+        }
+    }
+
+    //Considerar tamanhos múltiplos de 2
+    public void merge(Lista L){
+        int seq=1;
+        Lista l1,l2;
+        l1 = new Lista();
+        l2 = new Lista();
+        montaLista(L.getQtd()/2,l1,l2);
+
+        while(seq<L.getQtd()){
+            particao(L,l1,l2);
+            fusao(L,l1,l2,seq);
+            seq*=2;
+        }
+    }
+
+    public void mergeRecursivo(Lista L){
 
     }
 
@@ -318,8 +435,8 @@ public class Ordenacao {
         int vet[],i;
         No pa;
         Lista nova=new Lista();
-
         vet=new int[L.getMaior()+1];
+        
         for(pa=L.getPrim();pa!=null;pa=pa.getProx()){
             i=pa.getValor();
             vet[i]++;
