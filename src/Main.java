@@ -5,7 +5,7 @@ public class Main{
         Lista L;
         Ordenacao ord = new Ordenacao();
 
-        for(int i=1;i<17;i++){
+        for(int i=1;i<18;i++){
             L = new Lista();
             L.preencheLista();
             System.out.println("\n------------------------------------------------------------------------------------------------------------------------");

@@ -71,13 +71,70 @@ public class Lista {
         addValor(84);
         addValor(4);
         addValor(5);
+
+        addValor(12);
+        addValor(10);
+        addValor(5);
+        addValor(7);
+        addValor(9);
+        addValor(4);
+        addValor(2);
+        addValor(1);
+        addValor(11);
+        addValor(5);
+        addValor(7);
+        addValor(10);
+        addValor(25);
+        addValor(84);
+        addValor(4);
+        addValor(5);
+
+        addValor(12);
+        addValor(10);
+        addValor(5);
+        addValor(7);
+        addValor(9);
+        addValor(4);
+        addValor(2);
+        addValor(1);
+        addValor(11);
+        addValor(5);
+        addValor(7);
+        addValor(10);
+        addValor(25);
+        addValor(84);
+        addValor(4);
+        addValor(5);
+
+        addValor(12);
+        addValor(10);
+        addValor(5);
+        addValor(7);
+        addValor(9);
+        addValor(4);
+        addValor(2);
+        addValor(1);
+        addValor(11);
+        addValor(5);
+        addValor(7);
+        addValor(10);
+        addValor(25);
+        addValor(84);
+        addValor(4);
+        addValor(5);
     }
 
     public void exibeLista(){
         No aux=prim;
+        int tabulacao=16;
 
         for(int i=0;i<qtd;i++)
         {
+            if(i==tabulacao)
+            {
+                System.out.print("\n");
+                tabulacao+=16;
+            }
             if(i+1==qtd)
                 System.out.printf(" [%d]",aux.getValor());
             else
@@ -86,9 +143,9 @@ public class Lista {
         }
 
         if(ordenado)
-            System.out.print(" Ordenada         \u2714");
+            System.out.print("\nOrdenada         \u2714");
         else
-            System.out.print(" Desordenada      \u2717");
+            System.out.print("\nDesordenada      \u2717");
     }
 
     public void limpaLista() {

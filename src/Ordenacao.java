@@ -2,6 +2,23 @@ public class Ordenacao {
 
     public Ordenacao(){}
 
+    private No calc_meioMergeR(No ini,No fim){
+        int cont=0;
+        No meio=fim;
+
+        while(meio!=ini)
+        {
+            meio=meio.getAnt();
+            cont++;
+        }
+        cont++;
+
+        for(int i=0;i<(cont-1)/2;i++)
+            meio=meio.getProx();
+
+        return meio;
+    }
+
     public No calc_meioMerge(Lista l){
         int metade=l.getQtd()/2;
         No meio=l.getPrim();
@@ -35,6 +52,27 @@ public class Ordenacao {
         aux=a.getValor();
         a.setValor(b.getValor());
         b.setValor(aux);
+    }
+
+    //esse aqui é só pro tim
+    public void insercaoDireta(No ini,No fim){
+        if(ini!=null && fim!=null && ini!=fim){
+            No pi=ini.getProx(), ppos;
+            int aux;
+
+            while(pi!=fim.getProx()){
+                aux=pi.getValor();
+                ppos=pi;
+                while(ppos!=ini && aux<ppos.getAnt().getValor())
+                {
+                    ppos.setValor(ppos.getAnt().getValor());
+                    ppos=ppos.getAnt();
+                }
+
+                ppos.setValor(aux);
+                pi=pi.getProx();
+            }
+        }
     }
 
     public void insercaoDireta(Lista L){
@@ -323,21 +361,32 @@ public class Ordenacao {
         pa=ini;
         pb=fim;
 
-        while(pa!=pb)
+        while(pa!=pb && pa.getAnt()!=pb)
         {
             while(pa.getValor()<pivo)
                 pa=pa.getProx();
             while(pivo<pb.getValor())
                 pb=pb.getAnt();
 
-            if(pa.getAnt()!=pb)
+            if(pa!=pb && pa.getAnt()!=pb)
+            {
                 troca(pa,pb);
+                if(pa.getValor()==pb.getValor())
+                    pa=pa.getProx();
+            }
         }
 
+        if(pa==pb)
+            if(pa.getValor()<=pivo && pa!=fim)
+                pa=pa.getProx();
+            else if(pb!=ini)
+                pb=pb.getAnt();
+
+
         if(pa!=ini)
-            quickSP(ini,pa.getAnt());
+            quickCP(ini,pa.getAnt());
         if(pb!=fim)
-            quickSP(pb.getProx(),fim);
+            quickCP(pb.getProx(),fim);
     }
 
     public void quickComPivo(Lista L){
@@ -419,8 +468,57 @@ public class Ordenacao {
         }
     }
 
-    public void mergeRecursivo(Lista L){
+    private void fusaoR(No esq1,No dir1,No esq2,No dir2){
+        Lista aux=new Lista();
 
+        No p1=esq1;
+        No p2=esq2;
+
+        while(p1!=dir1.getProx()&&p2!=dir2.getProx()) {
+            if(p1.getValor()<=p2.getValor()){
+                aux.addValor(p1.getValor());
+                p1=p1.getProx();
+            }
+            else
+            {
+                aux.addValor(p2.getValor());
+                p2=p2.getProx();
+            }
+        }
+
+        while(p1!=dir1.getProx()){
+            aux.addValor(p1.getValor());
+            p1=p1.getProx();
+        }
+
+        while(p2!=dir2.getProx()){
+            aux.addValor(p2.getValor());
+            p2=p2.getProx();
+        }
+
+        No pl=esq1;
+        No pa=aux.getPrim();
+
+        while(pa!=null){
+            pl.setValor(pa.getValor());
+            pl=pl.getProx();
+            pa=pa.getProx();
+        }
+    }
+
+    private void mergeR(No esq,No dir){
+        No meio;
+
+        if(esq!=null && dir!=null && esq!=dir){
+            meio=calc_meioMergeR(esq, dir);
+            mergeR(esq,meio);
+            mergeR(meio.getProx(),dir);
+            fusaoR(esq,meio,meio.getProx(),dir);
+        }
+    }
+
+    public void mergeRecursivo(Lista L){
+        mergeR(L.getPrim(),L.getUlt());
     }
 
     public No buscaNumCounting(int i,No busca){
@@ -436,7 +534,7 @@ public class Ordenacao {
         No pa;
         Lista nova=new Lista();
         vet=new int[L.getMaior()+1];
-        
+
         for(pa=L.getPrim();pa!=null;pa=pa.getProx()){
             i=pa.getValor();
             vet[i]++;
@@ -576,7 +674,98 @@ public class Ordenacao {
         }
     }
 
-    public void tim(Lista L){
+    private void mesclarInPlace(Lista L,No esq,No meio,No dir){
+        if(esq!=null && meio!=null && dir!=null){
+            No p1=esq;
+            No p2=meio.getProx();
+            No limite=dir.getProx();
+            No proxP2;
 
+            while(p1!=p2 && p2!=limite){
+                if(p1.getValor()<=p2.getValor()){
+                    p1=p1.getProx();
+                }
+                else
+                {
+                    proxP2=p2.getProx();
+
+                    p2.getAnt().setProx(p2.getProx());
+                    if(p2.getProx()!=null){
+                        p2.getProx().setAnt(p2.getAnt());
+                    }
+                    else
+                    {
+                        L.setUlt(p2.getAnt());
+                    }
+
+                    p2.setAnt(p1.getAnt());
+                    p2.setProx(p1);
+                    if(p1.getAnt()!=null){
+                        p1.getAnt().setProx(p2);
+                    }
+                    else
+                    {
+                        L.setPrim(p2);
+                    }
+                    p1.setAnt(p2);
+
+                    p2=proxP2;
+                }
+            }
+        }
+    }
+
+    public void tim(Lista L){
+        int n=L.getQtd();
+        if(n>1){
+            int tamBloco=32;
+            No pa=L.getPrim();
+            No fimBloco;
+            int cont;
+
+            while(pa!=null){
+                fimBloco=pa;
+                cont=1;
+                while(cont<tamBloco && fimBloco.getProx()!=null){
+                    fimBloco=fimBloco.getProx();
+                    cont++;
+                }
+                insercaoDireta(pa,fimBloco);
+                pa=fimBloco.getProx();
+            }
+
+            int tamMerge=32;
+            No esq,meio,dir,limiteEsq;
+
+            while(tamMerge<n){
+                esq=L.getPrim();
+                while(esq!=null){
+                    meio=esq;
+                    cont=1;
+                    while(cont<tamMerge && meio.getProx()!=null){
+                        meio=meio.getProx();
+                        cont++;
+                    }
+
+                    if(meio.getProx()!=null){
+                        dir=meio.getProx();
+                        cont=1;
+                        while(cont<tamMerge && dir.getProx()!=null){
+                            dir=dir.getProx();
+                            cont++;
+                        }
+
+                        limiteEsq=dir.getProx();
+                        mesclarInPlace(L,esq,meio,dir);
+                        esq=limiteEsq;
+                    }
+                    else
+                    {
+                        esq=null;
+                    }
+                }
+                tamMerge=tamMerge*2;
+            }
+        }
     }
 }
